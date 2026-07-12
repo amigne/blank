@@ -4,6 +4,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .eggs/
+wheels/
 
 # ── Build output ────────────────────────────────────────────────────────
 dist/
@@ -13,8 +14,10 @@ build/
 # ── Environments & secrets ──────────────────────────────────────────────
 .env
 .env.*
-!.env.template
+!.env.*.example
+!.env.*.template
 !.env.example
+!.env.template
 
 # ── IDE / Editor ────────────────────────────────────────────────────────
 .idea/

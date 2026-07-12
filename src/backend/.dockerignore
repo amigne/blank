@@ -1,0 +1,68 @@
+
+
+# ── Environments & secrets ──────────────────────────────────────────────
+.env
+.env.*
+!.env.template
+!.env.example
+
+# ── IDE / Editor ────────────────────────────────────────────────────────
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+*~
+.DS_Store
+
+
+
+# ── Testing & Coverage ──────────────────────────────────────────────────
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ── Docker ──────────────────────────────────────────────────────────────
+/docker-compose.override.yml
+
+# ── Misc ────────────────────────────────────────────────────────────────
+*.log
+tmp/
+
+=============
+
+# ── Dependencies ────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+
+# ── Python virtual environment ──────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Environments & secrets ──────────────────────────────────────────────
+.env
+.env.*
+!.env.template
+!.env.example
+
+# ── Testing & Coverage ──────────────────────────────────────────────────
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ── Docker ──────────────────────────────────────────────────────────────
+Dockerfile*
+.dockerignore
+
+# ── Git ─────────────────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── Misc ────────────────────────────────────────────────────────────────
+*.log
+README.md
+tmp/

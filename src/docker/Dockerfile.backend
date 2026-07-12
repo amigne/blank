@@ -1,0 +1,36 @@
+# Backend Docker image
+# Python 3.14 + FastAPI with SQLAchemy async
+
+# ── Builder layer ───────────────────────────────────────────────────────
+FROM python:3.14-slim AS builder
+
+# Prevent bytecode and buffered output
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /app
+
+
+RUN pip install --no-cache-dir "uv==0.11.28"
+
+COPY pyproject.toml uv.lock ./
+
+RUN env UV_CACHE_DIR=/tmp/uv-cache \
+    uv export --frozen --no-dev --no-emit-project --format requirements.txt -o requirements.txt \
+    && pip install --no-cache-dir --require-hashes -r requirements.txt \
+    && rm -rf /tmp/uv-cache requirements.txt
+
+
+# ── Production image ────────────────────────────────────────────────────
+FROM builder AS production
+COPY . .
+
+# Run as non-root for defense-in-depth
+RUN useradd --system --no-create-home app \
+    && chown -R app:app /app
+USER app
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
