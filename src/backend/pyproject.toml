@@ -19,5 +19,44 @@ dev = [
     "pip-audit>=2.10.1",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
+    "pytest-env>=1.6.0",
     "ruff>=0.15.21",
+]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+pythonpath = ["."]
+env = [
+    "DATABASE_HOST=localhost",
+    "DATABASE_USER=app",
+    "DATABASE_PASSWORD=test-password",
+    "DATABASE_NAME=app",
+    "HEALTH_FULL_TOKEN=test-health-token-0123456789abcdef0123",
+    "FRONTEND_ORIGIN=http://localhost:5173",
 ]
