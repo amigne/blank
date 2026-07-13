@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
     Fails fast if the database is unreachable or if required secrets are missing.
     """
     configure_logging()
-    
+
     logger.info("Backend starting")
     yield
     logger.info("Backend stopping")

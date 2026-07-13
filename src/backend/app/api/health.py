@@ -42,9 +42,11 @@ def _health_token_matches(x_health_token: str | None) -> bool:
     alternative_token = secrets.token_hex(32)
 
     comparison_result = secrets.compare_digest(
-            x_health_token.encode("utf-8"),
-            settings.health_full_token.get_secret_value().encode("utf-8") if has_health_token_configured else alternative_token.encode("utf-8"),
-        )
+        x_health_token.encode("utf-8"),
+        settings.health_full_token.get_secret_value().encode("utf-8")
+        if has_health_token_configured
+        else alternative_token.encode("utf-8"),
+    )
 
     return has_health_token_configured and comparison_result
 
@@ -79,6 +81,5 @@ async def health_full(
         "status": overall,
         "version": "0.1.0",  # TODO: auto-insert from package version
         "uptime_seconds": round(time.time() - _started_at, 3),
-        "dependencies": {
-        },
+        "dependencies": {},
     }

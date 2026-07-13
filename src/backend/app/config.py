@@ -4,6 +4,7 @@ from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings
 from sqlalchemy import URL
 
+
 class Settings(BaseSettings):
     """Typed application settings sourced from environment variables.
 
@@ -20,9 +21,7 @@ class Settings(BaseSettings):
 
     # ── Health ────────────────────────────────────────────────────────
     health_full_token: SecretStr | None = Field(
-        default=None,
-        min_length=32,
-        max_length=128
+        default=None, min_length=32, max_length=128
     )
 
     # ── CORS ──────────────────────────────────────────────────────────
@@ -35,10 +34,9 @@ class Settings(BaseSettings):
     environment: str = "production"
 
     # ── API ────────────────────────────────────────────────────────────
-    docs_url: str|None = None
-    redoc_url: str|None = None
-    openapi_url: str|None = None
-
+    docs_url: str | None = None
+    redoc_url: str | None = None
+    openapi_url: str | None = None
 
     @property
     def database_url(self) -> URL:

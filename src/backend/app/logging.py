@@ -2,6 +2,7 @@
 
 Uses structlog to emit JSON lines to stdout.
 """
+
 import logging
 import structlog
 import sys
@@ -27,7 +28,7 @@ def configure_logging() -> None:
             structlog.processors.UnicodeDecoder(),
             structlog.processors.JSONRenderer(),
         ],
-        wrapper_class=structlog.make_filtering_bound_logger(level),        
+        wrapper_class=structlog.make_filtering_bound_logger(level),
         context_class=dict,
         logger_factory=structlog.PrintLoggerFactory(file=sys.stdout),
         cache_logger_on_first_use=True,
@@ -35,10 +36,7 @@ def configure_logging() -> None:
 
     # Route stdlib logging through structlog
     logging.basicConfig(
-        format="%(message)s",
-        stream=sys.stdout,
-        level=level,
-        force=True
+        format="%(message)s", stream=sys.stdout, level=level, force=True
     )
 
     # Silence noisy third-party loggers at INFO
