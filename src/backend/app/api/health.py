@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 from typing import Annotated
 
 from app.config import settings
+from app.core.database import probe_database_health
 
 _started_at = time.time()
 
@@ -75,11 +76,25 @@ async def health_full(
     if not _health_token_matches(x_health_token):
         return _forbidden_health_response()
 
-    overall = "ok"  # TODO: remove when we implement dependency checks
+    db_status = "ok"
+    db_latency_ms: float | None = None
 
+    try:
+        db_latency_ms = await probe_database_health()
+    except Exception:
+        db_status = "unavailable"
+        db_latency_ms = None
+
+    overall = "ok" if db_status == "ok" else "degraded"
+    
     return {
         "status": overall,
         "version": "0.1.0",  # TODO: auto-insert from package version
         "uptime_seconds": round(time.time() - _started_at, 3),
-        "dependencies": {},
+        "dependencies": {
+            "database": {
+                "status": db_status,
+                "latency_ms": db_latency_ms,
+            },
+        },
     }

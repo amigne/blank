@@ -28,6 +28,7 @@ async def lifespan(app: FastAPI):
     """
     configure_logging()
 
+    # str(URL) masks the password as *** — safe to log.
     logger.info("Backend starting")
     yield
     logger.info("Backend stopping")
