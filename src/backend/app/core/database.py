@@ -29,3 +29,12 @@ async def probe_database_health() -> float:
     async with engine.connect() as conn:
         await conn.execute(text("SELECT 1"))
     return round((time.monotonic() - t0) * 1000, 2)
+
+async def check_database_connection() -> None:
+    """Verify database connectivity at startup.
+
+    Raises an exception if the database is unreachable, causing the
+    application container to fail early rather than starting with a
+    degraded state. Docker Compose restart policy handles retries.
+    """
+    await probe_database_health()

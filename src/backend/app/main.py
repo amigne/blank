@@ -13,6 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.router import router as api_router
+from app.core.database import check_database_connection
 from app.config import settings
 from app.logging import configure_logging, get_logger
 from app.version import APP_VERSION
@@ -22,14 +23,15 @@ logger = get_logger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan — configure logging, validate secrets, verify
-    database connectivity, cleanup on shutdown.
+    """Application lifespan — configure logging, verify database connectivity,
+    cleanup on shutdown.
 
     Fails fast if the database is unreachable or if required secrets are missing.
     """
     configure_logging()
 
-    # str(URL) masks the password as *** — safe to log.
+    await check_database_connection()
+
     logger.info("Backend starting")
     yield
     logger.info("Backend stopping")
