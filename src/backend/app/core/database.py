@@ -27,6 +27,7 @@ def get_engine() -> AsyncEngine:
             echo=False,
             pool_size=settings.database_pool_size,
             max_overflow=settings.database_max_overflow,
+            pool_recycle=settings.database_pool_recycle,
             pool_pre_ping=True,
             connect_args={
                 "timeout": 5,  # seconds — fail-fast instead of hanging 60 s (asyncpg default)
