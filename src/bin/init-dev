@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$ROOT_DIR"
+
+# ── Secrets (dev) ──────────────────────────────────────────────────────
+SECRETS_DEV_DIR="secrets/dev"
+mkdir -p "$SECRETS_DEV_DIR"
+
+# Generate a random postgres password if none exists.
+if [[ ! -f "$SECRETS_DEV_DIR/postgres_password" ]]; then
+    openssl rand -base64 18 | tr -d '\n/+=' > "$SECRETS_DEV_DIR/postgres_password"
+    echo "Generated: $SECRETS_DEV_DIR/postgres_password"
+fi
+
+# Generate a random health token if none exists.
+if [[ ! -f "$SECRETS_DEV_DIR/health_full_token" ]]; then
+    openssl rand -hex 32 > "$SECRETS_DEV_DIR/health_full_token"
+    echo "Generated: $SECRETS_DEV_DIR/health_full_token"
+fi
+
+# ── Environment file ───────────────────────────────────────────────────
+ENV_FILE="env/dev.env"
+ENV_EXAMPLE="env/dev.env.example"
+
+if [[ ! -f "$ENV_FILE" ]] && [[ -f "$ENV_EXAMPLE" ]]; then
+    cp "$ENV_EXAMPLE" "$ENV_FILE"
+    echo "Created: $ENV_FILE (from example)"
+elif [[ ! -f "$ENV_FILE" ]]; then
+    echo "ERROR: Neither $ENV_FILE nor $ENV_EXAMPLE found." >&2
+    exit 1
+fi
+
+# ── Backend .env (convenience symlink) ─────────────────────────────────
+BACKEND_ENV="backend/.env"
+if [[ ! -f "$BACKEND_ENV" ]]; then
+    cp "$ENV_FILE" "$BACKEND_ENV"
+    echo "Created: $BACKEND_ENV (copy of $ENV_FILE)"
+fi
+
+# ── VERSION file ───────────────────────────────────────────────────────
+if [[ ! -f VERSION ]]; then
+    echo "0.0.0-dev" > VERSION
+    echo "Created: VERSION (0.0.0-dev)"
+fi
+
+echo "Development environment ready."

@@ -3,10 +3,13 @@ SERVICE ?= app
 
 COMPOSE = ./bin/compose ${ENV}
 
-.PHONY: init config build pull up start stop restart down logs ps shell run test destroy
+.PHONY: init init-test config build pull up start stop restart down logs ps shell run test destroy
 
 init:
 	./bin/init-dev
+
+init-test:
+	./bin/init-test
 
 config:
 	$(COMPOSE) config --quiet
