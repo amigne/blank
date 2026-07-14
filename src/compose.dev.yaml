@@ -26,31 +26,22 @@ services:
         source: ./backend
         target: /app
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     target: development
-  #     args:
-  #       NODE_IMAGE: "${MYAPP_NODE_IMAGE:-node:24.18-alpine3.24}"
-  #   command:
-  #     - npm
-  #     - run
-  #     - dev
-  #     - --
-  #     - --host
-  #     - 0.0.0.0
-  #     - --port
-  #     - "3000"
-  #   environment:
-  #     NODE_ENV: development
-  #     APP_ENV: development
-  #   volumes:
-  #     - type: bind
-  #       source: ./frontend
-  #       target: /app
-  #     - type: volume
-  #       source: frontend_node_modules
-  #       target: /app/node_modules
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile.frontend
+      target: development
+      args:
+        NODE_IMAGE: "${MYAPP_NODE_IMAGE:-node:24.18.0-alpine}"
+    environment:
+      NODE_ENVIRONMENT: development
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /app
+      - type: volume
+        source: frontend_node_modules
+        target: /app/node_modules
 
   caddy:
     ports:

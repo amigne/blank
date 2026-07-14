@@ -1,24 +1,9 @@
 ENV ?= dev
-SERVICE *= app
+SERVICE ?= app
 
 COMPOSE = ./bin/compose ${ENV}
 
-.PHONY:
-init
-config
-build
-pull
-up
-start
-stop
-restart
-down
-logs
-ps
-shell
-run
-test
-destroy
+.PHONY: init config build pull up start stop restart down logs ps shell run test destroy
 
 init:
 	./bin/init-dev
