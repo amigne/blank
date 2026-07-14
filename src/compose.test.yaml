@@ -8,8 +8,8 @@ services:
 
   backend:
     build:
-      dockerfile: ../docker/app/Dockerfile.backend    
-      context: ./backend
+      dockerfile: docker/app/Dockerfile.backend    
+      context: .
       target: test
       args:
         PYTHON_IMAGE: "${MYAPP_PYTHON_IMAGE:-python:3.14-slim}"

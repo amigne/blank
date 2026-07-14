@@ -18,6 +18,7 @@ class Settings(BaseSettings):
 
     # ── Environment ────────────────────────────────────────────────────
     environment: str = "production"
+    build_number: str = "undefined"
 
     # ── Logging ───────────────────────────────────────────────────────
     log_level: str = "INFO"

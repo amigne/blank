@@ -9,12 +9,12 @@ Creates and configures the ASGI application with:
 """
 
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 
+from app.api.router import router as api_router
 from app.config import settings
 from app.logging import configure_logging, get_logger
-from app.api.router import router as api_router
+from app.version import APP_VERSION
 
 logger = get_logger(__name__)
 
@@ -38,7 +38,7 @@ def create_app() -> FastAPI:
     """Build and return the configured FastAPI application."""
     app = FastAPI(
         title="Backend API",
-        version="0.1.0",  ## TODO: Use version from pyproject.toml
+        version=APP_VERSION,
         docs_url=settings.docs_url,
         redoc_url=settings.redoc_url,
         openapi_url=settings.openapi_url,

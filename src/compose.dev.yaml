@@ -5,8 +5,8 @@ services:
 
   backend:
     build:
-      dockerfile: ../docker/app/Dockerfile.backend
-      context: ./backend
+      dockerfile: docker/app/Dockerfile.backend
+      context: .
       target: development
       args:
         PYTHON_IMAGE: "${MYAPP_PYTHON_IMAGE:-python:3.14-slim}"

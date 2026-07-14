@@ -17,7 +17,7 @@ RUN groupadd --system app \
 
 RUN pip install --no-cache-dir "uv==0.11.28"
 
-COPY pyproject.toml uv.lock ./
+COPY backend/pyproject.toml backend/uv.lock ./
 
 RUN env UV_CACHE_DIR=/tmp/uv-cache \
     uv export --frozen --no-dev --no-emit-project --format requirements.txt -o requirements.txt \
@@ -32,7 +32,8 @@ RUN env UV_CACHE_DIR=/tmp/uv-cache \
     && pip install --no-cache-dir --require-hashes -r requirements-dev.txt \
     && rm -rf /tmp/uv-cache requirements-dev.txt
 
-COPY . /app
+COPY VERSION /VERSION
+COPY backend/ /app/
 
 EXPOSE 8000
 
@@ -45,7 +46,9 @@ CMD ["pytest", "-q"]
 
 # ── Production image ────────────────────────────────────────────────────
 FROM builder AS production
-COPY --chown=app:app . /app
+
+COPY --chown=app:app VERSION /VERSION
+COPY --chown=app:app backend/ /app/
 
 # Run as non-root for defense-in-depth
 #RUN useradd --system --no-create-home app \

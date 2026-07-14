@@ -13,6 +13,7 @@ from typing import Annotated
 
 from app.config import settings
 from app.core.database import probe_database_health
+from app.version import APP_VERSION
 
 _started_at = time.time()
 
@@ -89,7 +90,8 @@ async def health_full(
     
     return {
         "status": overall,
-        "version": "0.1.0",  # TODO: auto-insert from package version
+        "version": APP_VERSION,
+        "build_number": settings.build_number,
         "uptime_seconds": round(time.time() - _started_at, 3),
         "dependencies": {
             "database": {

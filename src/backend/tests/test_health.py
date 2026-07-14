@@ -29,6 +29,7 @@ class TestPublicHealth:
         response = await client.get("/health")
         body = response.json()
         assert "version" not in body
+        assert "build_number" not in body
         assert "uptime_seconds" not in body
         assert "dependencies" not in body
 
@@ -91,7 +92,13 @@ class TestProtectedHealth:
         body = response.json()
         assert body["status"] == "ok"
         assert "version" in body
+        assert "build_number" in body
         assert "uptime_seconds" in body
         assert isinstance(body["uptime_seconds"], (int, float))
         assert "dependencies" in body
         assert isinstance(body["dependencies"], dict)
+        assert "database" in body["dependencies"]
+        assert isinstance(body["dependencies"]["database"], dict)
+        assert "status" in body["dependencies"]["database"]
+        assert "latency_ms" in body["dependencies"]["database"]
+        assert isinstance(body["dependencies"]["database"]["latency_ms"], (int, float))
