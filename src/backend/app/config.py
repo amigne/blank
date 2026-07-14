@@ -1,7 +1,7 @@
 """Application configuration loaded from environment variables."""
 
 from pydantic import Field, SecretStr
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
 
 
@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     All secrets must be provided via environment — never committed to the repo.
     Call ``check_secrets()`` at startup to refuse starting with placeholder values
     """
+
+    model_config = SettingsConfigDict(
+        secrets_dir="/run/secrets"
+    )
 
     # ── Environment ────────────────────────────────────────────────────
     environment: str = "production"
@@ -24,7 +28,7 @@ class Settings(BaseSettings):
     )
 
     # ── CORS ──────────────────────────────────────────────────────────
-    frontend_origin: str
+    # cors_origin: str
 
     # ── Database ──────────────────────────────────────────────────────
     database_host: str

@@ -51,13 +51,15 @@ services:
       DATABASE_USER: "${MYAPP_DATABASE_USER:?Define MYAPP_DATABASE_USER}"
       DATABASE_PASSWORD_FILE: /run/secrets/postgres_password
 
-      DOCS_URL: "${MYAPP_BACKEND_DOCS_URL}"
-      REDOC_URL: "${MYAPP_BACKEND_REDOC_URL}"
-      OPENAPI_URL: "${MYAPP_BACKEND_OPENAPI_URL}"
+      DOCS_URL: "${MYAPP_BACKEND_DOCS_URL-}"
+      REDOC_URL: "${MYAPP_BACKEND_REDOC_URL-}"
+      OPENAPI_URL: "${MYAPP_BACKEND_OPENAPI_URL-}"
 
     secrets:
-      - postgres_password
-      - health_full_token
+      - source: postgres_password
+        target: DATABASE_PASSWORD
+      - source: health_full_token
+        target: HEALTH_FULL_TOKEN
       # - backend_secret_key
     depends_on:
       db:
@@ -72,7 +74,7 @@ services:
         - -c
         - >-
           import urllib.request;
-          urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=3).read()
+          urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()
       interval: 15s
       timeout: 5s
       retries: 5

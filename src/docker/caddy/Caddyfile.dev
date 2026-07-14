@@ -1,0 +1,39 @@
+{
+	admin off
+	auto_https off
+}
+
+{$APP_ADDRESS:http://localhost} {
+	encode zstd gzip
+
+	log {
+		output stdout
+		format json
+	}
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	# API + endpoints de santé -> backend FastAPI.
+	# L'API expose /api/v1/... ; on transmet le chemin complet (pas de réécriture).
+	# Les routes de santé sont exactement /health et /health/full.
+	@backend path /api/* /health /health/full
+	handle @backend {
+		reverse_proxy backend:8000 {
+			health_uri /health
+			health_interval 15s
+			health_timeout 3s
+		}
+	}
+
+	# Tout le reste -> frontend.
+	# Le service `frontend` est commenté dans compose.dev.yaml : ce bloc
+	# renverra un 502 tant qu'il n'est pas activé. Décommente le service,
+	# puis ce handle prendra effet.
+	handle {
+		reverse_proxy frontend:3000
+	}
+}
