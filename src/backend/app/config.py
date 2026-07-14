@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     database_user: str
     database_password: SecretStr = Field(min_length=8, max_length=128)
     database_name: str
+    database_pool_size: int = Field(default=10, ge=1, le=100)
+    database_max_overflow: int = Field(default=20, ge=0, le=200)
 
     # ── API ────────────────────────────────────────────────────────────
     docs_url: str | None = None
