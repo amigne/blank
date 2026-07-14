@@ -40,7 +40,9 @@ services:
     environment:
       ENVIRONMENT: "${MYAPP_APP_ENVIRONMENT:?Define MYAPP_APP_ENVIRONMENT}"
       LOG_LEVEL: "${MYAPP_LOG_LEVEL:-INFO}"
+      
       # PUBLIC_BASE_URL: "${MYAPP_PUBLIC_BASE_URL:?Define MYAPP_PUBLIC_BASE_URL}"
+      CORS_ORIGIN: "${MYAPP_CORS_ORIGIN:?Define MYAPP_CORS_ORIGIN}"
 
       HEALTH_FULL_TOKEN_FILE: /run/secrets/health_full_token
       # SECRET_KEY_FILE: /run/secrets/backend_secret_key

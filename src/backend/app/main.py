@@ -10,6 +10,7 @@ Creates and configures the ASGI application with:
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.router import router as api_router
 from app.config import settings
@@ -43,6 +44,14 @@ def create_app() -> FastAPI:
         redoc_url=settings.redoc_url,
         openapi_url=settings.openapi_url,
         lifespan=lifespan,
+    )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origin.split(","),
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type", "Accept-Language", "X-Request-ID"],
     )
 
     # API routes

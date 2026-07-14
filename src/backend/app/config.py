@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     )
 
     # ── CORS ──────────────────────────────────────────────────────────
-    # cors_origin: str
+    cors_origin: str
 
     # ── Database ──────────────────────────────────────────────────────
     database_host: str
