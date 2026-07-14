@@ -42,7 +42,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload
 # ── Test image ──────────────────────────────────────────────────────────
 FROM development AS test
 
-CMD ["pytest", "-q"]
+CMD ["pytest", "-v"]
 
 # ── Production image ────────────────────────────────────────────────────
 FROM builder AS production

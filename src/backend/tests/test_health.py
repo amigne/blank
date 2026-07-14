@@ -5,14 +5,17 @@ Covers:
 - Protected /health/full returns 403 without token.
 - Protected /health/full returns 403 with wrong token.
 - Protected /health/full returns 200 with correct token.
-- Settings.check_secrets() rejects placeholder values.
-- Settings.check_secrets() enforces SMTP and backup secrets in production/test.
-- API lifespan verifies database connectivity at startup.
 """
 
 import pytest
 
 from httpx import Request
+
+
+async def _fake_db_probe() -> float:
+    """Return a fake database probe latency (ms), avoiding a real connection."""
+    return 0.42
+
 
 class TestPublicHealth:
     """Public health endpoint tests."""
@@ -76,11 +79,16 @@ class TestProtectedHealth:
 
     async def test_full_health_accepts_correct_token_mocked_db(self, client, monkeypatch):
         """GET /health/full with correct token returns 200 when DB is mocked."""
+        import app.api.health
+        
         from app import config
         from pydantic import SecretStr
 
         monkeypatch.setattr(
             config.settings, "health_full_token", SecretStr("test-health-token")
+        )
+        monkeypatch.setattr(
+            app.api.health, "probe_database_health", _fake_db_probe,
         )
 
         response = await client.get(

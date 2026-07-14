@@ -21,6 +21,7 @@ services:
       LOG_LEVEL: "${MYAPP_LOG_LEVEL:-WARNING}"
 
   frontend:
+    read_only: false
     build:
       context: .
       dockerfile: docker/app/Dockerfile.frontend
