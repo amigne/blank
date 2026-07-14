@@ -41,7 +41,7 @@ def load_app_version(version_file: Path = VERSION_FILE) -> str:
     if not SEMVER_PATTERN.fullmatch(version):
         raise RuntimeError(
             f"Invalid application version in {version_file}: {version!r}. "
-            "Expected SemVer sur as '1.2.3', '1.2.3-rc.1'. "
+            "Expected SemVer such as '1.2.3', '1.2.3-rc.1'. "
             "or '1.2.3-feature-x'."
         )
     
