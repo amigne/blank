@@ -8,13 +8,16 @@ Creates and configures the ASGI application with:
 - Startup/shutdown lifecycle hooks
 """
 
+import uuid
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.api.router import router as api_router
-from app.core.database import check_database_connection
 from app.config import settings
+from app.core.database import check_database_connection
 from app.logging import configure_logging, get_logger
 from app.version import APP_VERSION
 
@@ -55,6 +58,30 @@ def create_app() -> FastAPI:
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["Authorization", "Content-Type", "Accept-Language", "X-Request-ID"],
     )
+
+    # ── Correlation ID middleware ─────────────────────────────────────
+    @app.middleware("http")
+    async def correlation_id_middleware(request: Request, call_next):
+        request_id = request.headers.get("X-Request-ID", uuid.uuid4().hex[:16])
+        # Bind to structlog context so every log entry carries the request ID.
+        import structlog.contextvars
+        structlog.contextvars.bind_contextvars(request_id=request_id)
+        response = await call_next(request)
+        response.headers["X-Request-ID"] = request_id
+        return response
+
+    # ── Global error handler ──────────────────────────────────────────
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        logger.exception(
+            "Unhandled exception",
+            path=request.url.path,
+            method=request.method,
+        )
+        return JSONResponse(
+            status_code=500,
+            content={"error": {"code": "INTERNAL_ERROR", "message": "An internal error occurred"}},
+        )
 
     # API routes
     app.include_router(api_router)
