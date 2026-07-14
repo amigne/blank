@@ -47,17 +47,17 @@ run:
 	$(COMPOSE) run --rm $(SERVICE) $(CMD)
 
 test:
-	./bin/compose test up /
-	  --build /
-	  --abort-on-container-exit /
+	./bin/compose test up \
+	  --build \
+	  --abort-on-container-exit \
 	  --exit-code-from app
-	./bin/compose test down /
-	  --volumes /
+	./bin/compose test down \
+	  --volumes \
 	  --remove-orphans
 
 destroy:
 	@test "$(CONFIRM)" = "yes" ||
 	(echo "Use CONFIRM=yes to delete containers and volumes"; exit 1)
-	$(COMPOSE) down /
-	  --volumes /
+	$(COMPOSE) down \
+	  --volumes \
 	  --remove-orphans
