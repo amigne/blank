@@ -9,7 +9,6 @@ class Settings(BaseSettings):
     """Typed application settings sourced from environment variables.
 
     All secrets must be provided via environment — never committed to the repo.
-    Call ``check_secrets()`` at startup to refuse starting with placeholder values
     """
 
     model_config = SettingsConfigDict(
