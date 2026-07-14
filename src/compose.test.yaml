@@ -1,0 +1,39 @@
+services:
+  db:
+    volumes:
+      - type: tmpfs
+        target: /var/lib/postgresql
+        tmpfs:
+          size: 536870912
+
+  backend:
+    build:
+      dockerfile: ../docker/app/Dockerfile.backend    
+      context: ./backend
+      target: test
+      args:
+        PYTHON_IMAGE: "${MYAPP_PYTHON_IMAGE:-python:3.14-slim}"
+    command:
+      - pytest
+      - -q
+    environment:
+      ENVIRONMENT: test
+      LOG_LEVEL: "${MYAPP_LOG_LEVEL:-WARNING}"
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     target: test
+  #     args:
+  #       NODE_IMAGE: "${MYAPP_NODE_IMAGE:-node:24.18-alpine3.24}"
+  #   command:
+  #     - npm
+  #     - run
+  #     - test:ci
+  #   environment:
+  #     NODE_ENV: test
+  #     APP_ENV: test
+
+  caddy:
+    profiles:
+      - proxy

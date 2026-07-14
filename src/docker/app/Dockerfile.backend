@@ -12,6 +12,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+RUN groupadd --system app \
+    && useradd --system --gid app --home-dir /app app
 
 RUN pip install --no-cache-dir "uv==0.11.28"
 
@@ -22,14 +24,33 @@ RUN env UV_CACHE_DIR=/tmp/uv-cache \
     && pip install --no-cache-dir --require-hashes -r requirements.txt \
     && rm -rf /tmp/uv-cache requirements.txt
 
+# ── Development image ───────────────────────────────────────────────────
+FROM builder AS development
+
+RUN env UV_CACHE_DIR=/tmp/uv-cache \
+    uv export --frozen --no-emit-project --format requirements.txt -o requirements-dev.txt \
+    && pip install --no-cache-dir --require-hashes -r requirements-dev.txt \
+    && rm -rf /tmp/uv-cache requirements-dev.txt
+
+COPY . /app
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+# ── Test image ──────────────────────────────────────────────────────────
+FROM development AS test
+
+CMD ["pytest", "-q"]
 
 # ── Production image ────────────────────────────────────────────────────
 FROM builder AS production
-COPY . .
+COPY --chown=app:app . /app
 
 # Run as non-root for defense-in-depth
-RUN useradd --system --no-create-home app \
-    && chown -R app:app /app
+#RUN useradd --system --no-create-home app \
+#    && chown -R app:app /app
+
 USER app
 
 EXPOSE 8000

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$ROOT_DIR"
+
+SCENARIO="${1:-dev}"
+shift || true
+
+case "$SCENARIO" in
+    dev)
+        FILES="-f compose.yaml -f compose.dev.yaml"
+    ;;
+    test)
+        FILES="-f compose.yaml -f compose.test.yaml"
+    ;;
+    staging | prod)
+        FILES="-f compose.yaml -f compose.prod.yaml"
+    ;;
+
+    *)
+        echo "Unknown scenario: $SCENARIO" >&2
+        echo "Supported scenarios: dev, test, staging, prod" >&2
+        exit 2
+    ;;
+esac
+
+ENV_FILE="env/${SCENARIO}.env"
+if [[ ! -f "$ENV_FILE" ]]; then
+    echo "Missing environment file: $ENV_FILE" >&2
+    exit 2
+fi
+
+PROJECT_NAME="${COMPOSE_PROJECT_NAME:-myapp-${SCENARIO}}"
+
+exec docker compose \
+    --project-name "$PROJECT_NAME" \
+    --env-file "$ENV_FILE" \
+    $FILES \
+    "$@"

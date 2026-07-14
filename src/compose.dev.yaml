@@ -1,0 +1,60 @@
+services:
+  db:
+    ports:
+      - "127.0.0.1:${MYAPP_DATABASE_PORT:-5432}:5432"
+
+  backend:
+    build:
+      dockerfile: ../docker/app/Dockerfile.backend
+      context: ./backend
+      target: development
+      args:
+        PYTHON_IMAGE: "${MYAPP_PYTHON_IMAGE:-python:3.14-slim}"
+    command:
+      - uvicorn
+      - app.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
+    environment:
+      ENVIRONMENT: development
+      LOG_LEVEL: "${MYAPP_LOG_LEVEL:-DEBUG}"
+    volumes:
+      - type: bind
+        source: ./backend
+        target: /app
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     target: development
+  #     args:
+  #       NODE_IMAGE: "${MYAPP_NODE_IMAGE:-node:24.18-alpine3.24}"
+  #   command:
+  #     - npm
+  #     - run
+  #     - dev
+  #     - --
+  #     - --host
+  #     - 0.0.0.0
+  #     - --port
+  #     - "3000"
+  #   environment:
+  #     NODE_ENV: development
+  #     APP_ENV: development
+  #   volumes:
+  #     - type: bind
+  #       source: ./frontend
+  #       target: /app
+  #     - type: volume
+  #       source: frontend_node_modules
+  #       target: /app/node_modules
+
+  caddy:
+    ports:
+      - "127.0.0.1:${MYAPP_HTTP_PORT:-8080}:80"
+
+volumes:
+  frontend_node_modules:

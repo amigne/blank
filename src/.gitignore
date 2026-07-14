@@ -18,6 +18,10 @@ build/
 !.env.*.template
 !.env.example
 !.env.template
+env/*.env
+/secrets/**
+!/secrets/**/
+!/secrets/**/.gitkeep
 
 # ── IDE / Editor ────────────────────────────────────────────────────────
 .idea/
@@ -30,7 +34,6 @@ build/
 # ── Python virtual environment ──────────────────────────────────────────
 .venv/
 venv/
-env/
 
 # ── Testing & Coverage ──────────────────────────────────────────────────
 .coverage

@@ -12,12 +12,11 @@ class Settings(BaseSettings):
     Call ``check_secrets()`` at startup to refuse starting with placeholder values
     """
 
-    # ── Database ──────────────────────────────────────────────────────
-    database_host: str
-    database_port: int = 5432
-    database_user: str
-    database_password: SecretStr = Field(min_length=8, max_length=128)
-    database_name: str
+    # ── Environment ────────────────────────────────────────────────────
+    environment: str = "production"
+
+    # ── Logging ───────────────────────────────────────────────────────
+    log_level: str = "INFO"
 
     # ── Health ────────────────────────────────────────────────────────
     health_full_token: SecretStr | None = Field(
@@ -27,11 +26,12 @@ class Settings(BaseSettings):
     # ── CORS ──────────────────────────────────────────────────────────
     frontend_origin: str
 
-    # ── Logging ───────────────────────────────────────────────────────
-    log_level: str = "INFO"
-
-    # ── Environment ────────────────────────────────────────────────────
-    environment: str = "production"
+    # ── Database ──────────────────────────────────────────────────────
+    database_host: str
+    database_port: int = 5432
+    database_user: str
+    database_password: SecretStr = Field(min_length=8, max_length=128)
+    database_name: str
 
     # ── API ────────────────────────────────────────────────────────────
     docs_url: str | None = None
