@@ -98,6 +98,8 @@ services:
     cap_drop:
       - ALL
     pids_limit: 256
+    tmpfs:
+      - /tmp:size=64m,mode=1777
     expose:
       - "3000"
     logging: *default-logging
