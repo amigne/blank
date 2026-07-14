@@ -1,0 +1,52 @@
+# ── Git ─────────────────────────────────────────────────────────────────
+.git/
+.gitignore
+.gitkeep
+
+# ── Environments & secrets ──────────────────────────────────────────────
+**/.env
+**/.env.*
+**/env/
+secrets/
+
+# ── Dependencies ────────────────────────────────────────────────────────
+**/__pycache__/
+**/*.py[cod]
+
+# ── Python virtual environment ──────────────────────────────────────────
+**/.venv/
+**/venv/
+
+# ── Testing & Coverage ──────────────────────────────────────────────────
+**/.coverage
+**/coverage/
+**/htmlcov/
+**/.pytest_cache/
+**/test-results/
+**/playwright-report/
+**/playwright/.cache/
+**/.ruff_cache/
+
+# ── Docker ──────────────────────────────────────────────────────────────
+compose.yaml
+compose.*.yaml
+Dockerfile*
+.dockerignore
+
+# ── AI Agents  ──────────────────────────────────────────────────────────
+.agents/
+.codex/
+.claude/
+
+# ── IDE / Editor ────────────────────────────────────────────────────────
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ── Misc ────────────────────────────────────────────────────────────────
+*.log
+README.md
+tmp/
