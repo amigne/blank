@@ -43,17 +43,17 @@ _started_at = time.time()
 router = APIRouter(tags=["health"])
 
 
-_FORBIDDEN_HEALTH_RESPONSE = {
-    "error": {
-        "code": "API_FORBIDDEN",
-        "details": [],
-    },
-}
-
-
 def _forbidden_health_response() -> JSONResponse:
     """Return the uniform forbidden envelope for protected health access."""
-    return JSONResponse(status_code=403, content=_FORBIDDEN_HEALTH_RESPONSE)
+    return JSONResponse(
+        status_code=403,
+        content={
+            "error": {
+                "code": "API_FORBIDDEN",
+                "details": [],
+            },
+        },
+    )
 
 
 def _health_token_matches(x_health_token: str | None) -> bool:
