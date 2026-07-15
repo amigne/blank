@@ -5,6 +5,10 @@ from sqlalchemy import pool
 
 from alembic import context
 
+from app.config import settings
+from app.db.base import Base
+from app.models import *  # noqa: F403 — populate Base.metadata for autogenerate
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -14,16 +18,15 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = None
+# Override the database URL with the value built from application settings
+# (environment variables and Docker secrets).
+config.set_main_option(
+    "sqlalchemy.url",
+    settings.database_url.render_as_string(hide_password=False),
+)
 
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
+# Target metadata for 'autogenerate' support.
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
