@@ -28,20 +28,19 @@ def load_app_version(version_file: Path = VERSION_FILE) -> str:
         raw_version = version_file.read_text(encoding="utf-8")
     except FileNotFoundError as error:
         raise RuntimeError(
-            f"Application version file is missing: {version_file}"
+            f"Application version file is missing: {version_file.name}"
         ) from error
-    
+
     version = raw_version.removesuffix("\n")
     if "\n" in version or not version:
         raise RuntimeError(
-            f"Application version file must contain exactly one non-empty line: "
-            f"{version_file}"
+            "Application version file must contain exactly one non-empty line"
         )
-    
+
     if not SEMVER_PATTERN.fullmatch(version):
         raise RuntimeError(
-            f"Invalid application version in {version_file}: {version!r}. "
-            "Expected SemVer such as '1.2.3', '1.2.3-rc.1'. "
+            f"Invalid application version {version!r}. "
+            "Expected SemVer such as '1.2.3', '1.2.3-rc.1' "
             "or '1.2.3-feature-x'."
         )
     
