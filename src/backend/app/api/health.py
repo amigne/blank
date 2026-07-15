@@ -9,11 +9,34 @@ import time
 
 from fastapi import APIRouter, Header
 from fastapi.responses import JSONResponse
-from typing import Annotated
+from pydantic import BaseModel
+from typing import Annotated, Literal
 
 from app.config import settings
 from app.core.database import probe_database_health
 from app.version import APP_VERSION
+
+# ── Response models ──────────────────────────────────────────────────
+
+
+class HealthPublicResponse(BaseModel):
+    status: Literal["ok"]
+
+
+class DependencyStatus(BaseModel):
+    status: Literal["ok", "unavailable"]
+    latency_ms: float | None
+
+
+class HealthFullResponse(BaseModel):
+    status: Literal["ok", "degraded"]
+    version: str
+    build_number: str
+    uptime_seconds: float
+    dependencies: dict[str, DependencyStatus]
+
+
+# ── Router ───────────────────────────────────────────────────────────
 
 _started_at = time.time()
 
@@ -53,8 +76,8 @@ def _health_token_matches(x_health_token: str | None) -> bool:
     return has_health_token_configured and comparison_result
 
 
-@router.get("/health")
-async def health_public() -> dict[str, object]:
+@router.get("/health", response_model=HealthPublicResponse)
+async def health_public():
     """Public health check — liveness and readiness only.
 
     Returns lightweight status. Does not expose dependency details.
@@ -64,10 +87,10 @@ async def health_public() -> dict[str, object]:
     }
 
 
-@router.get("/health/full")
+@router.get("/health/full", response_model=HealthFullResponse)
 async def health_full(
     x_health_token: Annotated[str | None, Header(alias="X-Health-Token")] = None,
-) -> dict[str, object]:
+):
     """Protected full health check — includes dependency status.
 
     Requires ``X-Health-Token`` header matching the ``HEALTH_FULL_TOKEN`` deployment secret.
