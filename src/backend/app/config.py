@@ -1,5 +1,7 @@
 """Application configuration loaded from environment variables."""
 
+from typing import Literal
+
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import URL
@@ -20,7 +22,7 @@ class Settings(BaseSettings):
     build_number: str = "undefined"
 
     # ── Logging ───────────────────────────────────────────────────────
-    log_level: str = "INFO"
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
 
     # ── Health ────────────────────────────────────────────────────────
     health_full_token: SecretStr | None = Field(

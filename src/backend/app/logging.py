@@ -16,7 +16,7 @@ def configure_logging() -> None:
     Uses the log level from settings. All loggers emit to stdout in JSON format.
     Third-party loggers are routed through the same processor chain.
     """
-    level = getattr(logging, settings.log_level.upper(), logging.INFO)
+    level = getattr(logging, settings.log_level)
 
     structlog.configure(
         processors=[
