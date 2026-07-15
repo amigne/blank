@@ -1,0 +1,272 @@
+:root {
+  --login-dark-blue: #123c69;
+  --login-light-blue: #d8e9f7;
+
+  --login-text-dark: #14213d;
+  --login-text-light: #ffffff;
+
+  --login-input-background: rgba(255, 255, 255, 0.9);
+  --login-input-border: #7b9fbd;
+  --login-input-focus: #174f7d;
+
+  --login-button-background: #123c69;
+  --login-button-background-hover: #0d2f53;
+  --login-button-text: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/*
+ * Conteneur principal :
+ * deux colonnes de même largeur et hauteur totale de l'écran.
+ */
+.login-page {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/*
+ * Configuration commune des deux panneaux.
+ */
+.login-panel {
+  position: relative;
+  display: flex;
+  width: 50%;
+  min-height: 100vh;
+}
+
+/*
+ * Panneau de gauche.
+ */
+.login-panel--branding {
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background-color: var(--login-dark-blue);
+  color: var(--login-text-light);
+}
+
+/*
+ * Le logo reste centré dans le panneau gauche.
+ */
+.login-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(70%, 30rem);
+}
+
+.login-logo {
+  display: block;
+  width: 100%;
+  max-width: 24rem;
+  height: auto;
+  object-fit: contain;
+}
+
+/*
+ * Copyright positionné dans le coin inférieur gauche.
+ */
+.login-copyright {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  font-size: 0.875rem;
+  opacity: 0.85;
+}
+
+/*
+ * Panneau de droite.
+ */
+.login-panel--form {
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background-color: var(--login-light-blue);
+  color: var(--login-text-dark);
+}
+
+/*
+ * Limite la largeur du formulaire.
+ */
+.login-form-container {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.login-title {
+  margin: 0 0 3rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/*
+ * Label et champ disposés sur la même ligne,
+ * comme dans le schéma initial.
+ */
+.login-field {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+
+.login-field label {
+  font-weight: 600;
+}
+
+.login-field input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--login-input-border);
+  border-radius: 0.35rem;
+  outline: none;
+  background-color: var(--login-input-background);
+  color: var(--login-text-dark);
+  font: inherit;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.login-field input:focus {
+  border-color: var(--login-input-focus);
+  box-shadow: 0 0 0 3px rgba(23, 79, 125, 0.2);
+}
+
+.login-button {
+  align-self: center;
+  min-width: 8rem;
+  min-height: 2.75rem;
+  margin-top: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background-color: var(--login-button-background);
+  color: var(--login-button-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    transform 100ms ease;
+}
+
+.login-button:hover {
+  background-color: var(--login-button-background-hover);
+}
+
+.login-button:active {
+  transform: translateY(1px);
+}
+
+.login-button:focus-visible,
+.login-links a:focus-visible {
+  outline: 3px solid rgba(23, 79, 125, 0.4);
+  outline-offset: 3px;
+}
+
+/*
+ * Liens Sign up et Lost password.
+ */
+.login-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.login-links a {
+  color: var(--login-text-dark);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+}
+
+/*
+ * Sur les écrans plus étroits, les panneaux sont empilés.
+ */
+@media (max-width: 768px) {
+  .login-page {
+    flex-direction: column;
+  }
+
+  .login-panel {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .login-panel--branding {
+    min-height: 35vh;
+    padding: 3rem 2rem 4.5rem;
+  }
+
+  .login-panel--form {
+    flex: 1;
+    min-height: 65vh;
+    padding: 3rem 1.5rem;
+  }
+
+  .login-logo-container {
+    width: min(65%, 18rem);
+  }
+
+  .login-copyright {
+    right: 1.5rem;
+    bottom: 1.25rem;
+    left: 1.5rem;
+    text-align: center;
+  }
+
+  .login-title {
+    margin-bottom: 2.5rem;
+  }
+}
+
+/*
+ * Sur les très petits écrans, les labels passent au-dessus
+ * des champs.
+ */
+@media (max-width: 480px) {
+  .login-field {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .login-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+}

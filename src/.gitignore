@@ -35,6 +35,9 @@ env/*.env
 .venv/
 venv/
 
+# ── Node dependencies ───────────────────────────────────────────────────
+.pnpm-store/
+
 # ── Testing & Coverage ──────────────────────────────────────────────────
 .coverage
 coverage/

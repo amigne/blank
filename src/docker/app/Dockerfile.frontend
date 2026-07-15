@@ -1,5 +1,7 @@
 FROM node:24.18.0-alpine AS dependencies
 
+ENV COREPACK_HOME=/tmp/corepack
+
 WORKDIR /app
 
 RUN corepack enable

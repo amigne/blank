@@ -1,3 +1,10 @@
+import LoginPage from "./pages/LoginPage";
+
+export default function App() {
+  return <LoginPage />;
+}
+
+/*
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
@@ -120,3 +127,4 @@ function App() {
 }
 
 export default App
+*/
