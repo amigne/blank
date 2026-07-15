@@ -24,6 +24,6 @@ def to_package_version(app_version: str) -> str:
         name, number = match.groups()
         return f"{base_version}{_PEP440_PRERELEASE_PREFIX[name]}{number}"
 
-    # Préversion libre : valable pour l'application et Docker, mais pas PEP 440
-    # sous sa forme originale.
+    # Free-form pre-release tag: valid for the application and Docker, but not
+    # PEP 440 in its original form.
     return f"{base_version}.dev0"
